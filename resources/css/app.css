@@ -1,17 +1,23 @@
-@import 'tailwindcss';
+@import "tailwindcss";
 
 @source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';
 @source '../../storage/framework/views/*.php';
 
 @font-face {
-    font-family: 'JetBrains Mono';
-    src: url('/fonts/JetBrainsMono.ttf') format('truetype');
+    font-family: "JetBrains Mono";
+    src: url("/fonts/JetBrainsMono.ttf") format("truetype");
     font-weight: 100 800;
     font-style: normal;
     font-display: swap;
 }
 
 @theme {
-    --font-sans: 'JetBrains Mono', 'Instrument Sans', ui-sans-serif, system-ui, sans-serif;
-    --font-mono: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, ...;
+    --font-sans:
+        "JetBrains Mono", "Instrument Sans", ui-sans-serif, system-ui,
+        sans-serif;
+    --font-mono:
+        "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas,
+        ...;
 }
+
+@plugin "daisyui";
