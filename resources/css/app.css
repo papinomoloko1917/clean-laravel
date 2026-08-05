@@ -20,4 +20,6 @@
         ...;
 }
 
-@plugin "daisyui";
+@plugin "daisyui"{
+    themes: light --default,
+}
