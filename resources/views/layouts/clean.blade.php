@@ -9,10 +9,8 @@
 </head>
 
 <body>
-    <header>
-        <livewire-navbar />
-    </header>
     <main class="container mx-auto">
+        {{-- @yield('content') --}}
         {{ $slot }}
     </main>
 </body>

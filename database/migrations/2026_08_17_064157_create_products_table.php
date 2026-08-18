@@ -15,9 +15,6 @@ return new class extends Migration
             $table->id();
             $table->string('title');
             $table->text('description');
-            $table->decimal('price', 10,2);
-            $table->integer('quantity')->default(0);
-            $table->boolean('is_active')->default(false);
             $table->timestamps();
         });
     }
