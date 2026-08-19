@@ -11,7 +11,7 @@ new class extends Component {
 ?>
 
 <div>
-    <form action="{{ route('register') }}" method="POST">
+    <form action="{{ route('register.store') }}" method="POST">
         @csrf
         <div class="flex items-center justify-center min-h-screen">
             <fieldset class="fieldset bg-base-200 border-base-300 rounded-box w-xs border p-4">

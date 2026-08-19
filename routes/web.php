@@ -2,14 +2,15 @@
 
 use Illuminate\Support\Facades\Route;
 
-Route::livewire('/', 'pages::home')->name('home.index');
+Route::livewire('/', 'pages::home')->name('home');
 
-Route::prefix('/products')->group(function () {
+Route::middleware('auth')->prefix('/products')->group(function () {
     Route::livewire('', 'pages::product.index')->name('product.index');
     Route::livewire('{id}/show', 'pages::product.show')->name('product.show');
-})->middleware('auth');
+    Route::livewire('/cart', 'pages::product.cart')->name('cart.index');
+});
 
-Route::prefix('/auth')->group(function () {
-    Route::livewire('/register', 'pages::auth.register')->name('auth.register');
-    Route::livewire('/login', 'pages::auth.login')->name('auth.login');
+Route::middleware('guest')->prefix('/auth')->group(function () {
+    Route::livewire('/register', 'pages::auth.register')->name('register');
+    Route::livewire('/login', 'pages::auth.login')->name('login');
 });
