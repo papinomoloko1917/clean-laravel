@@ -12,7 +12,7 @@
     @livewireStyles
 </head>
 
-<body class="flex flex-col min-h-screen">
+<body class="container mx-auto flex min-h-screen flex-col">
     <header>
         <livewire:navbar.navbar />
     </header>
