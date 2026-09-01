@@ -7,13 +7,13 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class CartItem extends Model
 {
-    public function user()
+    public function cart(): BelongsTo
     {
-        return $this->BelongsTo(User::class);
+        return $this->belongsTo(Cart::class);
     }
 
-    public function product()
+    public function product(): BelongsTo
     {
-        return $this->BelongsTo(Product::class);
+        return $this->belongsTo(Product::class);
     }
 }

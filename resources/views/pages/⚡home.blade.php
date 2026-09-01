@@ -1,10 +1,18 @@
 <?php
 
 use Livewire\Component;
+use App\Models\Product;
 
-new class extends Component {};
+new class extends Component {
+    public $products = [];
+
+    public function mount()
+    {
+        $this->products = Product::get();
+    }
+};
 ?>
 
 <div>
-    <h1>Home page</h1>
+
 </div>
