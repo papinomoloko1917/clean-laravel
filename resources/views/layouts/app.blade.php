@@ -12,14 +12,17 @@
     @livewireStyles
 </head>
 
-<body>
+<body class="flex flex-col min-h-screen">
     <header>
-        <livewire:navbar.nav />
+        <livewire:navbar.navbar />
     </header>
-    <main>
+    <main class="flex-1">
         {{ $slot }}
     </main>
     @livewireScripts
+    <footer>
+        <livewire:footer.footer />
+    </footer>
 </body>
 
 </html>
