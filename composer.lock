@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "5d360179ee2c2daaa5db488a30abf280",
+    "content-hash": "fb4f49a525c94c35288b0e815a1ffd95",
     "packages": [
         {
             "name": "archtechx/enums",
@@ -1643,16 +1643,16 @@
         },
         {
             "name": "laravel-lang/lang",
-            "version": "15.34.0",
+            "version": "15.34.7",
             "source": {
                 "type": "git",
                 "url": "https://github.com/Laravel-Lang/lang.git",
-                "reference": "333718a7ce92c92bfb9f1625467792b048cfcfbd"
+                "reference": "d2ef4bf5e254da220ac75e3c8a70050a4e93d069"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Laravel-Lang/lang/zipball/333718a7ce92c92bfb9f1625467792b048cfcfbd",
-                "reference": "333718a7ce92c92bfb9f1625467792b048cfcfbd",
+                "url": "https://api.github.com/repos/Laravel-Lang/lang/zipball/d2ef4bf5e254da220ac75e3c8a70050a4e93d069",
+                "reference": "d2ef4bf5e254da220ac75e3c8a70050a4e93d069",
                 "shasum": ""
             },
             "require": {
@@ -1713,7 +1713,7 @@
                     "type": "yoomoney"
                 }
             ],
-            "time": "2026-08-03T21:33:23+00:00"
+            "time": "2026-09-01T14:21:27+00:00"
         },
         {
             "name": "laravel-lang/locale-list",
@@ -8633,6 +8633,85 @@
             "time": "2025-04-30T06:54:44+00:00"
         },
         {
+            "name": "laravel-lang/attributes",
+            "version": "2.16.4",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/Laravel-Lang/attributes.git",
+                "reference": "4a0de72632bb1862532977fd76ed6be9c1cc65af"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/Laravel-Lang/attributes/zipball/4a0de72632bb1862532977fd76ed6be9c1cc65af",
+                "reference": "4a0de72632bb1862532977fd76ed6be9c1cc65af",
+                "shasum": ""
+            },
+            "require": {
+                "ext-json": "*",
+                "laravel-lang/publisher": "^14.0 || ^15.0 || ^16.0",
+                "php": "^8.1"
+            },
+            "require-dev": {
+                "laravel-lang/status-generator": "^1.19 || ^2.0",
+                "phpunit/phpunit": "^10.0 || ^11.0 || ^12.0",
+                "symfony/var-dumper": "^6.0 || ^7.0"
+            },
+            "type": "library",
+            "extra": {
+                "laravel": {
+                    "providers": [
+                        "LaravelLang\\Attributes\\ServiceProvider"
+                    ]
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "LaravelLang\\Attributes\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Andrey Helldar",
+                    "email": "helldar@dragon-code.pro"
+                },
+                {
+                    "name": "Laravel-Lang Team",
+                    "homepage": "https://github.com/Laravel-Lang"
+                }
+            ],
+            "description": "Translation of form element names",
+            "keywords": [
+                "attributes",
+                "fields",
+                "form",
+                "lang",
+                "languages",
+                "laravel",
+                "messages",
+                "translations",
+                "validation"
+            ],
+            "support": {
+                "issues": "https://github.com/Laravel-Lang/attributes/issues",
+                "source": "https://github.com/Laravel-Lang/attributes/tree/2.16.4"
+            },
+            "funding": [
+                {
+                    "url": "https://boosty.to/dragon-code",
+                    "type": "boosty"
+                },
+                {
+                    "url": "https://yoomoney.ru/to/410012608840929",
+                    "type": "yoomoney"
+                }
+            ],
+            "time": "2026-05-30T12:11:05+00:00"
+        },
+        {
             "name": "laravel/agent-detector",
             "version": "v2.0.2",
             "source": {
@@ -10881,5 +10960,5 @@
         "php": "^8.3"
     },
     "platform-dev": {},
-    "plugin-api-version": "2.9.0"
+    "plugin-api-version": "2.6.0"
 }

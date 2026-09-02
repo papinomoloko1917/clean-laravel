@@ -13,21 +13,10 @@
 </head>
 
 <body class="container mx-auto flex min-h-screen flex-col">
-
-    <header>
-        <livewire:navbar.navbar />
-    </header>
-
     <main class="flex-1">
         {{ $slot }}
     </main>
-
-    <footer>
-        <livewire:footer.footer />
-    </footer>
-
     @livewireScripts
-
 </body>
 
 </html>
