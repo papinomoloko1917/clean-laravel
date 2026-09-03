@@ -20,7 +20,7 @@ CODEX PROJECT HANDOFF
 4. Новый Codex обязан проверить repository заново: файл фиксирует состояние
    на момент создания, а код мог измениться после этого.
 
-Дата handoff: 2026-09-02
+Дата последнего обновления handoff: 2026-09-03
 Проект: /home/ninjamax/projects/clean-laravel
 Язык общения: русский.
 
@@ -37,26 +37,43 @@ CODEX PROJECT HANDOFF
 - После пользовательской реализации сначала проводить review, не переписывать.
 - Стек и подробные правила находятся в полном исходном промпте ниже.
 
-ТЕКУЩИЙ CHECKPOINT
-------------------
-Следующая незавершённая задача: первый happy-path тест login.
+ТЕКУЩИЙ CHECKPOINT / ТОЧКА ВХОДА
+--------------------------------
+Базовые registration, login, remember me и logout реализованы и покрыты
+feature-тестами. Начат этап password reset.
 
-План текущей задачи:
-- Создать tests/Feature/Auth/LoginTest.php.
-- Подключить RefreshDatabase.
-- Создать User с известными email и обычным password.
-- Выполнить POST на route('login.store') с email/password.
-- Проверить redirect на '/'.
-- Проверить, что авторизован именно созданный пользователь через
-  assertAuthenticatedAs($user).
-- Не использовать actingAs(), потому что это обойдёт проверяемый login.
-- Пока не тестировать неверный пароль, remember me, rate limiting, logout
-  или отображение страницы.
-- Команда проверки:
-  ./vendor/bin/sail artisan test --filter=LoginTest
+Последняя завершённая работа пользователя:
+- в config/fortify.php включён Features::resetPasswords();
+- проверено появление Fortify routes password.request, password.email,
+  password.reset и password.update;
+- Fortify::requestPasswordResetLinkView() зарегистрирован и возвращает
+  view('pages.auth.forgot-password');
+- создан resources/views/pages/auth/forgot-password.blade.php;
+- создан anonymous Livewire component
+  resources/views/components/auth/⚡forgot-password.blade.php;
+- страница выводит текст «Восстановление пароля».
 
-Последнее сообщение наставника перед созданием handoff именно поставило эту
-задачу. Пользователь ещё не присылал LoginTest на review.
+Следующая незавершённая задача — создать первый GET-тест этой страницы:
+- файл tests/Feature/Auth/ForgotPasswordTest.php;
+- class использует RefreshDatabase, так как следующие тесты этого feature
+  будут создавать пользователей;
+- метод test_forgot_password_page_is_displayed(): void;
+- GET route('password.request');
+- assertOk();
+- assertSee('Восстановление пароля');
+- команда проверки:
+  ./vendor/bin/sail artisan test --filter=ForgotPasswordTest
+
+Пользователь прямо сообщил, что эту следующую задачу ещё НЕ начинал.
+Не писать тест вместо пользователя: сначала дождаться его реализации и
+провести review.
+
+Два необязательных замечания, которые уже были даны пользователю:
+- для согласованности с login-form/register-form можно переименовать компонент
+  в ⚡forgot-password-form.blade.php и изменить Livewire tag;
+- текущий текст страницы лучше оформить как <h1>, а не <p>.
+Текущая реализация при этом валидна, потому что имя файла и Livewire tag
+совпадают. Не выполнять эти изменения автоматически.
 
 СОСТОЯНИЕ ПРОЕКТА НА МОМЕНТ HANDOFF
 -----------------------------------
@@ -93,20 +110,38 @@ CODEX PROJECT HANDOFF
 
 Authentication/Fortify:
 - config/fortify.php: views включены.
+- config/fortify.php: Features::registration() и Features::resetPasswords()
+  включены.
+- config/fortify.php: Features::passkeys(...) также включён scaffolding-ом,
+  но passkeys пока не входят в текущий учебный этап; отдельно решить позже,
+  оставлять их или временно отключить.
 - FortifyServiceProvider:
   - Fortify::registerView возвращает view('pages.auth.register').
   - Fortify::loginView возвращает view('pages.auth.login').
+  - Fortify::requestPasswordResetLinkView возвращает
+    view('pages.auth.forgot-password').
 - Fortify владеет GET/POST /register и GET/POST /login.
+- Fortify владеет password reset routes:
+  - GET /forgot-password -> password.request;
+  - POST /forgot-password -> password.email;
+  - GET /reset-password/{token} -> password.reset;
+  - POST /reset-password -> password.update.
+- Routes password.confirm, password.confirm.store и password.confirmation —
+  отдельный механизм подтверждения текущего пароля. Они попали в вывод
+  route:list --name=password из-за совпадения имени, а не потому, что являются
+  стадиями forgotten-password flow.
 - bootstrap/app.php redirectGuestsTo использует route('login').
 - redirectUsersTo исправлен на route('home').
 - Fortify GET/POST registration routes проверены: middleware guest.
 - Blade-оболочки:
   - resources/views/pages/auth/register.blade.php
   - resources/views/pages/auth/login.blade.php
+  - resources/views/pages/auth/forgot-password.blade.php
 - Они используют <x-layouts::clear> и монтируют вложенные Livewire forms.
 - Livewire-компоненты:
   - resources/views/components/auth/⚡register-form.blade.php
   - resources/views/components/auth/⚡login-form.blade.php
+  - resources/views/components/auth/⚡forgot-password.blade.php
 - Layout:
   - resources/views/layouts/clear.blade.php
   - содержит Vite, @livewireStyles и @livewireScripts.
@@ -152,6 +187,46 @@ test_an_authenticated_user_cannot_view_the_registration_page(): void
 - Это исправило 500 в testing database из-за отсутствующей products table.
 - Пользователь на этом примере впервые изучил PHP trait и PHPUnit basics.
 
+Login tests:
+Файл tests/Feature/Auth/LoginTest.php использует RefreshDatabase и содержит
+пять проходящих сценариев:
+1. user can log in;
+2. invalid password запрещает login;
+3. user can log in with remember me;
+4. login page is displayed;
+5. authenticated user не может открыть login page.
+
+Login happy path проверяет redirect на '/', а также
+assertAuthenticatedAs($user). Invalid-password test проверяет session error
+для email и assertGuest().
+
+Remember me:
+- login form отправляет checkbox name="remember", value="1";
+- @checked(old('remember')) сохраняет визуальное состояние после ошибки;
+- тест отправляет remember=1;
+- имя recaller cookie получается через Auth::guard()->getRecallerName(), а не
+  hardcode;
+- тест проверяет наличие cookie и непустой $user->fresh()->remember_token.
+
+Logout tests:
+- tests/Feature/Auth/LogoutTest.php содержит проходящий сценарий user can log
+  out;
+- пользователь авторизуется через actingAs(), делает POST route('logout'),
+  проверяет redirect на '/' и assertGuest();
+- config/fortify.php redirect logout исправлен на '/'.
+
+Последний присланный полный запуск тестов перед password-reset page:
+- 13 passed;
+- 42 assertions;
+- Tests/Feature/Auth/LoginTest: 5 passed;
+- Tests/Feature/Auth/LogoutTest: 1 passed;
+- Tests/Feature/Auth/RegistrationTest: 5 passed;
+- плюс два стандартных ExampleTest.
+
+При последней независимой попытке Codex запустить suite Docker/Podman был
+остановлен. Статический review новых password-reset view/callback ошибок не
+обнаружил. Это состояние окружения могло измениться; перепроверить через Sail.
+
 Что пользователь уже понял о тестах:
 - Arrange / Act / Assert.
 - $this->get() и $this->post().
@@ -161,6 +236,10 @@ test_an_authenticated_user_cannot_view_the_registration_page(): void
 - RefreshDatabase подготавливает и изолирует testing database.
 - redirect сам по себе не доказывает создание и authentication.
 - actingAs() нельзя использовать в тесте самого login happy path.
+- : void явно фиксирует, что test method ничего не возвращает; для запуска
+  PHPUnit не обязателен, но является полезным PHP type contract.
+- remember me создаёт Laravel recaller cookie и remember_token; имя cookie
+  следует получать через guard, а не hardcode.
 
 Известные мелкие замечания, не выполнять автоматически:
 - В routes/web.php на последней инспекции оставался закомментированный старый
@@ -174,8 +253,9 @@ test_an_authenticated_user_cannot_view_the_registration_page(): void
 - В repository отсутствовал database/factories/UserFactory.php, хотя User model
   импортировал Database\Factories\UserFactory. До отдельного решения в тестах
   использовался User::create().
-- Текущий тестовый набор ещё не покрывает login, logout, remember me,
-  throttling, password reset или email verification.
+- Текущий тестовый набор ещё не покрывает password reset, email verification,
+  password confirmation и login throttling. Login, logout и remember me уже
+  покрыты на базовом уровне.
 
 Ранний архитектурный аудит (не является текущей задачей):
 - Phase 0 почти завершена.
@@ -223,7 +303,27 @@ test_an_authenticated_user_cannot_view_the_registration_page(): void
 14. В namespace была опечатка Test\Feature вместо Tests\Feature; исправлена.
 15. Постепенно были добавлены registration happy path и failure paths.
 16. На момент handoff registration tests завершены на базовом уровне.
-17. Следующая задача выдана для успешного login test; она ещё не выполнена.
+17. Пользователь написал успешный login test. Первоначально после POST он
+    вызвал actingAs(), из-за чего тест мог быть false positive. После review
+    заменил это на assertAuthenticatedAs($user).
+18. Добавлен failure test неверного пароля с assertSessionHasErrors('email')
+    и assertGuest().
+19. Исправлен Fortify logout redirect с устаревшего /auth/login на '/'.
+20. Добавлен LogoutTest: actingAs -> POST logout -> redirect '/' -> assertGuest.
+21. В login form добавлен checkbox remember=1 с @checked(old('remember')).
+22. Добавлен remember-me test: проверяются authentication, динамически
+    названная recaller cookie и remember_token пользователя.
+23. Добавлены GET-тест login page и тест запрета login page для already
+    authenticated user через guest middleware.
+24. Последний полный suite, присланный пользователем: 13 passed,
+    42 assertions.
+25. Следующим feature выбран password reset. Пользователь включил
+    Features::resetPasswords() и подтвердил четыре нужных Fortify route.
+26. Созданы Fortify callback, Blade shell и anonymous Livewire placeholder
+    страницы /forgot-password.
+27. Наставник выдал следующую задачу: самостоятельно создать
+    ForgotPasswordTest с GET route('password.request'), assertOk и assertSee.
+    Пользователь явно сообщил, что ещё не начинал её.
 
 ВАЖНЫЕ ОБЪЯСНЁННЫЕ КОНЦЕПЦИИ
 -----------------------------
@@ -263,6 +363,8 @@ Testing:
 ./vendor/bin/sail artisan test
 ./vendor/bin/sail artisan test --filter=RegistrationTest
 ./vendor/bin/sail artisan test --filter=LoginTest
+./vendor/bin/sail artisan test --filter=LogoutTest
+./vendor/bin/sail artisan test --filter=ForgotPasswordTest
 git status --short
 git diff
 git diff --check
@@ -1650,4 +1752,3 @@ Feature не считается завершённой только потому
 10. После этого проведи code review.
 
 Начинаем.
-

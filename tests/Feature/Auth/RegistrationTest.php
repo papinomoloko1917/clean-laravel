@@ -23,7 +23,7 @@ class RegistrationTest extends TestCase
             'name' => 'testUser',
             'email' => 'test@test.ru',
             'password' => 'password',
-            'password_confirmation' => 'password'
+            'password_confirmation' => 'password',
         ]);
 
         $response->assertRedirect('/');

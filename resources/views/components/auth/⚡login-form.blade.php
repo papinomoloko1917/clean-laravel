@@ -28,9 +28,17 @@ new class extends Component {};
                     <p class="text-red-500 font-semibold">{{ $message }}</p>
                 @enderror
 
+                <fieldset class="fieldset bg-base-100 border-base-300 rounded-box w-64 py-4">
+                    <label class="label">
+                        <input type="checkbox" name="remember" @checked(old('remember')) class="checkbox"
+                            value="1" />
+                        Запомнить меня
+                    </label>
+                </fieldset>
+
             </fieldset>
 
-            <button type="submit" class="btn btn-neutral btn-md w-full mt-3">Вход</button>
+            <button type="submit" class="btn btn-neutral btn-md w-full">Вход</button>
             <a wire:navigate href="{{ route('register') }}" class=" w-full text-center mt-2"><span
                     class="hover:no-underline link">Создать
                     аккаунт</span></a>
